@@ -1,13 +1,35 @@
-#insertion sort
-def insertionSort(arr):
-	for i in range(1, len(arr)):
-		key = arr[i] 
-		j = i-1
-		while j >= 0 and key < arr[j] : 
-			arr[j+1] = arr[j] 
-			j -= 1
-		arr[j+1] = key
-	return arr
+# Python program for implementation of MergeSort 
+def mergeSort(arr): 
+    if len(arr) >1: 
+        mid = len(arr)//2 #Finding the mid of the array 
+        L = arr[:mid] # Dividing the array elements  
+        R = arr[mid:] # into 2 halves 
+  
+        mergeSort(L) # Sorting the first half 
+        mergeSort(R) # Sorting the second half 
+  
+        i = j = k = 0
+          
+        # Copy data to temp arrays L[] and R[] 
+        while i < len(L) and j < len(R): 
+            if L[i] < R[j]: 
+                arr[k] = L[i] 
+                i+=1
+            else: 
+                arr[k] = R[j] 
+                j+=1
+            k+=1
+          
+        # Checking if any element was left 
+        while i < len(L): 
+            arr[k] = L[i] 
+            i+=1
+            k+=1
+          
+        while j < len(R): 
+            arr[k] = R[j] 
+            j+=1
+            k+=1
 
 #binary search for index of x
 def binary_search(arr, x): 
@@ -27,7 +49,7 @@ def binary_search(arr, x):
 			
 		else:
             		return mid 
-	return -1
+	return -(mid + 2)
 
 numSoap = int(input())
 soapCost = []
@@ -36,17 +58,30 @@ inputCost = input().split(" ")
 for i in range(numSoap):
 	soapCost.append(int(inputCost[i]))
 
-soapCost = insertionSort(soapCost)
+mergeSort(soapCost)
 
 q = int(input())
 
 for Q in range(q):
-	cost = int(input())
-	while cost > 0:
+	cost = int(input()) - 1
+	
+	if cost < soapCost[0]:
+		print(0)
+	elif cost > soapCost[numSoap - 1]:
+		print(numSoap)
+	else:
 		index = binary_search(soapCost, cost)
-		print(index, "hi", cost)
 		if index < 0:
-			cost -= 1
+			index = index * -1
+			if index >= numSoap:				
+				index = numSoap - 1
+			while cost < soapCost[index]:
+				index -= 1
 		else:
-			print(index + 1)
-			cost = 0
+			if index + 1 < numSoap:
+				while cost >= soapCost[index + 1]:
+					if index + 2 < numSoap:
+						index += 1
+					else:
+						break
+		print(index + 1)
